@@ -1,0 +1,6 @@
+---
+- name: Play for DefectDojo
+  hosts: dojo
+  roles:
+    - dojo
+  vars_files: ./group_vars/dojo.yml

@@ -1,0 +1,15 @@
+[Unit]
+Description=celery workers for DefectDojo
+Requires=dojo.service
+After=dojo.service
+
+[Service]
+ExecStart=/bin/bash -c 'su - dojosrv -c "cd {{ dojo_path }}/django-DefectDojo && source ../bin/activate && celery -A dojo worker -l info --concurrency 3"'
+Restart=always
+RestartSec=3
+#StandardOutput=syslog
+#StandardError=syslog
+SyslogIdentifier=celeryworker
+
+[Install]
+WantedBy=multi-user.target

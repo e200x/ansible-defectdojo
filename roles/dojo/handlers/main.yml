@@ -1,0 +1,35 @@
+---
+# handlers file for frontend
+
+- name: Reload systemd
+  become: true
+  systemd:
+    daemon-reload: true
+
+- name: Restart nginx
+  become: true
+  service:
+    name: nginx
+    state: restarted
+    enabled: true
+
+- name: Restart dojo-worker
+  become: true
+  service:
+    name: dojo-worker
+    state: restarted
+    enabled: true
+
+- name: Restart dojo
+  become: true
+  service:
+    name: dojo
+    state: restarted
+    enabled: true
+
+- name: Restart dojo-beat
+  become: true
+  service:
+    name: dojo-beat
+    state: restarted
+    enabled: true

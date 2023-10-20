@@ -1,0 +1,16 @@
+[Unit]
+Description=uWSGI instance to serve DefectDojo
+Requires=nginx.service postgresql.service
+Before=nginx.service
+After=postgresql.service
+
+[Service]
+ExecStart=/bin/bash -c 'su - dojosrv -c "cd {{ dojo_path }}/django-DefectDojo && source ../bin/activate && python manage.py runserver 127.0.0.1:8000"'
+Restart=always
+RestartSec=3
+#StandardOutput=syslog
+#StandardError=syslog
+SyslogIdentifier=dojo
+
+[Install]
+WantedBy=multi-user.target

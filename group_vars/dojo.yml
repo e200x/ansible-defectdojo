@@ -1,0 +1,36 @@
+---
+# NGINX Section
+proxy_pass_port: 8000 # Nginx proxy pass port
+
+# godojo Section
+godojo_version: 1.2.1 # godojo version
+
+# Install Section
+dojo_version: 2.27.2 # DD_Version - Release version of DefectDojo from Github Releases
+dojo_sourceinstall: false # DD_SourceInstall - Boolean if a source install is desired (vs a release)
+dojo_path: /opt/dojo # DD_Root - Root directory for the DefectDojo app Note: No traiing /
+
+# DB Section
+dojo_db_engine: PostgreSQL # DD_DB_Engine - Database engine to use (SQLite, MySQL, PostgreSQL, MariaDB) Note: CASE sEnSiTiVE!
+dojo_db_ruser: postgres # DD_DB_Ruser - Superuser for the database, root for MySQL/MaraiDB & posgres for PostgreSQL. Note: this and Rpass below REQUIRED for remote and existing DBs
+dojo_db_rpass: Pas$$w0rd # DD_DB_Rpass - Password for the database superuser TODO: Note: set to 24 random characters if left blank
+dojo_db_name: dojodb # DD_DB_Name - Name of the database that DefectDojo will use
+dojo_db_user: dojodbusr # DD_DB_User - Username of the database user that DefectDojo will use
+dojo_db_pass: Pas$$w0rd # DD_DB_Pass - Password for the database user DefectDojo will use Note: set to 24 random characters
+
+# OS Section
+dojo_os_user: dojosrv # DD_OS_User - OS user to own the DefectDojo instll and files
+dojo_os_pass: Pas$$w0rd # DD_OS_Pass - Password for the OS user for DefectDojo Note: set to 24 random characters
+dojo_os_group: dojosrv # DD_OS_Group - OS Group to own the DefectDojo install and files
+
+# Admin Section
+dojo_admin_user: admin # DD_ADMIN_User - Admin user for the DefectDojo web app
+dojo_admin_pass: password # DD_ADMIN_Pass - Password for the DefectDojo web app admin user Note: set to 24 random characters
+dojo_admin_email: admin@example.com # DD_ADMIN_Email - Email address for the web app admin user
+
+#Settings Section
+dojo_allowedhosts: 127.0.0.1 # DD_ALLOWED_HOSTS - List of hostnames/IPs allowed to connect to DefectDojo
+dojo_apphostname: http://defectdojo.example.com # DD_APP_HOSTNAME - holds the hostname of the DefectDojo web app
+dojo_email_url: smtp://defectdojo@mail.example.com:25 # DD_EMAIL_URL - TODO - Default: "smtp://user@:password@localhost:25"
+dojo_timezone: UTC # DD_TIME_ZONE - Time zone for DefectDojo app
+...

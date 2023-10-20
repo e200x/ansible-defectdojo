@@ -1,0 +1,15 @@
+[Unit]
+Description=celery beat for DefectDojo
+Requires=dojo.service
+After=dojo.service
+
+[Service]
+ExecStart=/bin/bash -c 'su - dojosrv -c "cd {{ dojo_path }}/django-DefectDojo && source ../bin/activate && celery -A dojo beat -l info"'
+Restart=always
+RestartSec=3
+#StandardOutput=syslog
+#StandardError=syslog
+SyslogIdentifier=celerybeat
+
+[Install]
+WantedBy=multi-user.target

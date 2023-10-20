@@ -1,0 +1,92 @@
+---
+# tasks file for minio
+
+- name: update apt
+  become: true
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install unzip and nginx
+  become: true
+  ansible.builtin.package:
+    name: 
+    - unzip
+    - nginx
+    state: present
+
+- name: create dir for godojo
+  become: true
+  file:
+    path: "/home/{{ ansible_user }}/godojo"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: "{{ ansible_user }}"
+
+- name: Download and unzip godojo
+  ansible.builtin.unarchive:
+    src: https://github.com/DefectDojo/godojo/releases/download/{{ godojo_version }}/godojo-v{{ godojo_version }}_standard.zip
+    dest: /home/{{ ansible_user }}/godojo
+    remote_src: yes
+
+- name: copy godojo config
+  become: true
+  template:
+    src: dojoConfig.yml.j2
+    dest: /home/{{ ansible_user }}/dojoConfig.yml
+  tags: ["copy-template"]
+
+- name: Run godojo for install DefectDojo
+  become: true
+  ansible.builtin.command: /home/{{ ansible_user }}/godojo/standard/godojo
+  register: command_output
+
+- name: Add variables to .env.prod file
+  become: true
+  ansible.builtin.lineinfile:
+    path: /opt/dojo/customizations/.env.prod
+    line: "{{ item.line }}"
+  loop:  
+    - line: DD_EMAIL_URL="{{ dojo_email_url }}"
+    - line: DD_ADMIN_EMAIL="{{ dojo_admin_email }}"
+    - line: DD_SITE_URL="{{ dojo_apphostname }}"
+
+- name: copy dojo-worker service
+  become: true
+  template:
+    src: dojo-worker.service.j2
+    dest: /etc/systemd/system/dojo-worker.service
+  notify:
+    - Reload systemd
+    - Restart dojo-worker
+  tags: ["copy-template"]
+
+- name: copy dojo service
+  become: true
+  template:
+    src: dojo.service.j2
+    dest: /etc/systemd/system/dojo.service
+  notify:
+      - Reload systemd
+      - Restart dojo
+  tags: ["copy-template"]
+
+- name: copy dojo-beat service
+  become: true
+  template:
+    src: dojo-beat.service.j2
+    dest: /etc/systemd/system/dojo-beat.service
+  notify:
+      - Reload systemd
+      - Restart dojo-beat
+  tags: ["copy-template"]
+
+- name: copy nginx config
+  become: true
+  template:
+    src: default.j2
+    dest: /etc/nginx/sites-available/default
+  notify:
+      - Reload systemd
+      - Restart nginx
+  tags: ["copy-template"]
